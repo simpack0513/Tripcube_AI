@@ -1,0 +1,12 @@
+// 한국관광공사 이름, description SQL문
+// 최대 limit는 1000인듯
+
+// SELECT (COUNT(*) AS ?CNT)
+
+SELECT ?name ?description ?resource
+WHERE {
+ ?resource a ?type ;
+           dc:description ?description;
+           rdfs:label ?name .
+           FILTER(?type IN (kto:ExperienceAttraction, kto:IndustrialAttraction, kto:NaturalAttraction, kto:NaturalResource, kto:RecreationalAttraction, kto:CulturalAttraction, kto:LeisureAndSportFacility, kto:ShopAndMarket))
+}OFFSET 0 LIMIT 1000
