@@ -1,6 +1,6 @@
 import pandas as pd
 import openai
-from sentence_transformers import SentenceTransformer, util
+from sentence_transformers import util
 import torch
 
 class Recommand:

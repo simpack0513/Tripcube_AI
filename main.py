@@ -1,19 +1,23 @@
 from fastapi import FastAPI
 import uvicorn
 from recommand import *
+from pydantic import BaseModel
 
 
 app = FastAPI()
 Recommand_module = Recommand()
+
+class In(BaseModel):
+    text : str
 
 @app.get('/')
 def home():
     return "main"
 
 @app.get('/recommand')
-def recommand():
+def recommand(data : In):
     global Recommand_module
-    return Recommand_module.get_query_sim_top_k("밤에 가서 건물의 불빛과 함께 예쁜 풍경을 보기")
+    return Recommand_module.get_query_sim_top_k(data.text)
 
 
 if __name__ == "__main__":
