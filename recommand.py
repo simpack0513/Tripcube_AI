@@ -3,27 +3,24 @@ import openai
 from sentence_transformers import SentenceTransformer, util
 import torch
 
-openai.api_key_path = "./api_key.txt"
+class Recommand:
 
-def embedding(text):
-	response = openai.Embedding.create(
-		model="text-embedding-ada-002",
-		input=text
-	)
-	return response["data"][0]["embedding"]
+	def __init__(self):
+		openai.api_key_path = "./api_key.txt"
+		self.metadata = pd.read_csv("./fulldata_embedding.csv", sep="@")
+		self.convert_data = []
+		for data in self.metadata["embeddings"].values.tolist():
+			self.convert_data.append(eval(data))
 
-def get_query_sim_top_k(vector):
-	cos_scores = util.pytorch_cos_sim(vector, convert_data)[0]
-	print(cos_scores.shape)
-	top_results = torch.topk(cos_scores, k=10)
-	return top_results
+	def embedding(self, text):
+		response = openai.Embedding.create(
+			model="text-embedding-ada-002",
+			input=text
+		)
+		return response["data"][0]["embedding"]
 
-metadata = pd.read_csv("./fulldata_embedding.csv", sep="@")
-
-convert_data = []
-for data in metadata["embeddings"].values.tolist():
-	convert_data.append(eval(data))
-
-vector = embedding("한강이 보이는 곳에서 치맥 한잔")
-top_result = get_query_sim_top_k(vector)
-print(metadata.iloc[top_result[1].numpy(), :][['name']])
+	def get_query_sim_top_k(self, text):
+		vector = self.embedding(text)
+		cos_scores = util.pytorch_cos_sim(vector, self.convert_data)[0]
+		top_results = torch.topk(cos_scores, k=5)
+		return (self.metadata.iloc[top_results[1].numpy(), :][['name']])
