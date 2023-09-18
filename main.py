@@ -9,6 +9,7 @@ Recommand_module = Recommand()
 
 class In(BaseModel):
     text : str
+    page : int
 
 @app.get('/')
 def home():
@@ -17,7 +18,7 @@ def home():
 @app.get('/recommand')
 def recommand(data : In):
     global Recommand_module
-    return Recommand_module.get_query_sim_top_k(data.text)
+    return Recommand_module.get_query_sim_top_k(data.text, data.page)
 
 
 if __name__ == "__main__":

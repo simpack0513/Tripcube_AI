@@ -19,8 +19,13 @@ class Recommand:
 		)
 		return response["data"][0]["embedding"]
 
-	def get_query_sim_top_k(self, text):
+	def get_query_sim_top_k(self, text, page):
 		vector = self.embedding(text)
 		cos_scores = util.pytorch_cos_sim(vector, self.convert_data)[0]
-		top_results = torch.topk(cos_scores, k=5)
-		return (self.metadata.iloc[top_results[1].numpy(), :][['name']])
+		top_results = torch.topk(cos_scores, k=page*5)
+		result = self.metadata.iloc[top_results[1].numpy(), :][['name', 'resource']]
+		print(result)
+		list = []
+		for i in result["resource"].values.tolist():
+			list.append(i.split("/")[4].split(">")[0])
+		return list[(page-1)*5:page*5]
