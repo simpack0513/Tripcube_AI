@@ -11,11 +11,7 @@ class In(BaseModel):
     text : str
     page : int
 
-@app.get('/')
-def home():
-    return "main"
-
-@app.get('/recommand')
+@app.post('/recommand')
 def recommand(data : In):
     global Recommand_module
     return Recommand_module.get_query_sim_top_k(data.text, data.page)

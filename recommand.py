@@ -27,5 +27,7 @@ class Recommand:
 		print(result)
 		list = []
 		for i in result["resource"].values.tolist():
-			list.append(i.split("/")[4].split(">")[0])
+			map = {}
+			map["placeId"] = i.split("/")[4].split(">")[0]
+			list.append(map)
 		return list[(page-1)*5:page*5]
